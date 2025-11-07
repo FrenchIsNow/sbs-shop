@@ -27,10 +27,10 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "NOM": "={{ $json[\"body\"][\"name\"] }}",
-            "EMAIL": "={{ $json[\"body\"][\"email\"] }}",
-            "NUMERO": "={{ $json[\"body\"][\"phone\"] }}",
-            "MESSAGE": "={{ $json[\"body\"][\"message\"] }}"
+            "NOM": "={{ $json.body.name }}",
+            "EMAIL": "={{ $json.body.email }}",
+            "NUMERO": "={{ $json.body.phone }}",
+            "MESSAGE": "={{ $json.body.message || '' }}"
           },
           "schema": [
             { "id": "NOM", "displayName": "NOM", "type": "string" },

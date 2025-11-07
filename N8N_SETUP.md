@@ -18,9 +18,15 @@ Ce workflow n8n reçoit les leads du formulaire de la landing page et les enregi
 1. Dans le node **"Append Lead to Sheet"**, vérifie:
    - Document ID: `1hog1XvrnNDqGKz_LGa9yBgBHD0H2F-yzuIIYg3atwvk`
    - Sheet Name: `LEAD`
-   - Colonnes mappées: `NOM`, `EMAIL`, `NUMERO`, `MESSAGE`
+   - Colonnes mappées (FIXED):
+     - `NOM`: `{{ $json.body.name }}`
+     - `EMAIL`: `{{ $json.body.email }}`
+     - `NUMERO`: `{{ $json.body.phone }}`
+     - `MESSAGE`: `{{ $json.body.message || '' }}`
 
 2. Configure les credentials Google Sheets OAuth2 si nécessaire
+
+**⚠️ Important:** Les mappings ont été corrigés pour utiliser la notation point au lieu de brackets.
 
 ### 3. Structure de la Google Sheet
 
@@ -69,7 +75,24 @@ Réponse JSON
 }
 ```
 
-## 🔍 Vérification
+## 🧪 Testing avec Auto-Fill Helper
+
+Un outil de test a été ajouté pour faciliter les tests en développement:
+
+1. **Démarre le serveur de dev:**
+```bash
+npm run dev
+```
+
+2. **Cherche le bouton violet** 🧪 dans le coin inférieur droit
+
+3. **Clique sur "Auto-Fill Form"** pour remplir automatiquement le formulaire
+
+4. **Soumets le formulaire** et vérifie que les données arrivent dans Google Sheets
+
+**Note:** Le bouton de test n'apparaît qu'en mode développement (`NODE_ENV=development`)
+
+## 🔍 Vérification Manuelle
 
 Pour tester le webhook manuellement:
 

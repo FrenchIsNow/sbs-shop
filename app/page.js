@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import CountdownTimer from "./components/CountdownTimer";
 import TextCursorProximity from "./components/TextCursorProximity";
+import FormTestHelper from "./components/FormTestHelper";
 import { COUNTDOWN_DATE } from "./config";
 
 import "@/styles/demo/demo3.scss";
@@ -41,21 +42,22 @@ const Demo3 = () => {
       comingSoon: "Coming Soon",
       description: "Just give us your info and we'll send you our electric motobike catalogue.",
       namePlaceholder: "Your name",
-      emailPlaceholder: "your@email.com",
-      phonePlaceholder: "+1 234 567 8900",
-      messagePlaceholder: "Tell us about your motivation",
+      emailPlaceholder: "your@email.com (optional if phone provided)",
+      phonePlaceholder: "+1 234 567 8900 (optional if email provided)",
+      messagePlaceholder: "Tell us about your motivation (optional)",
       submit: "Get Catalogue",
       sending: "Sending...",
       done: "Done!",
-      successMessage: "Thank you! After validation of your request, we will contact you.",
+      successMessage: "Thank you for your interest!",
+      successSubMessage: "We've received your request. After validation, we'll send you our exclusive e-bike catalogue.",
       errorMessage: "Oops! Something went wrong. Please try again.",
       aboutTitle: "Who are we?",
       aboutHeading: "Redefining urban mobility.",
       aboutText: "At SBS SHOP, we are committed to revolutionizing urban transportation with cutting-edge electric bikes. Our mission is to combine performance, style, and sustainability in every model we create. Whether you're commuting through the city or exploring new terrains, our e-bikes are designed to deliver an unmatched riding experience.\n\nWith a team of passionate engineers and designers, we blend innovation with craftsmanship to create bikes that not only meet today's needs but exceed tomorrow's expectations. Speed, power, and elegance are at the core of everything we do.\n\nJoin us as we redefine the future of mobility—one ride at a time.",
       errorName: "Please enter your name",
+      errorEmailOrPhone: "Please provide at least an email address or a phone number",
       errorEmail: "Please enter a valid email address",
-      errorPhone: "Please enter a valid phone number",
-      errorMotivation: "Please tell us about your motivation"
+      errorPhone: "Please enter a valid phone number"
     },
     fr: {
       about: "À propos",
@@ -65,21 +67,22 @@ const Demo3 = () => {
       comingSoon: "Bientôt",
       description: "Donne juste tes infos et on t'envoie notre catalogue de motos électriques.",
       namePlaceholder: "Ton nom",
-      emailPlaceholder: "ton@email.com",
-      phonePlaceholder: "+33 6 12 34 56 78",
-      messagePlaceholder: "Explique-nous ta motivation",
+      emailPlaceholder: "ton@email.com (optionnel si téléphone fourni)",
+      phonePlaceholder: "+33 6 12 34 56 78 (optionnel si email fourni)",
+      messagePlaceholder: "Explique-nous ta motivation (optionnel)",
       submit: "Recevoir le Catalogue",
       sending: "Envoi en cours...",
       done: "Envoyé!",
-      successMessage: "Merci! Après validation de ta demande, on te contactera.",
+      successMessage: "Merci pour ton intérêt!",
+      successSubMessage: "Nous avons bien reçu ta demande. Après validation, on t'envoie notre catalogue exclusif de motos électriques.",
       errorMessage: "Oups! Une erreur s'est produite. Réessaie.",
       aboutTitle: "Qui sommes-nous?",
       aboutHeading: "Redéfinir la mobilité urbaine.",
       aboutText: "Chez SBS SHOP, nous nous engageons à révolutionner le transport urbain avec des motos électriques de pointe. Notre mission est de combiner performance, style et durabilité dans chaque modèle que nous créons. Que vous vous déplaciez en ville ou que vous exploriez de nouveaux terrains, nos motos électriques sont conçues pour offrir une expérience de conduite inégalée.\n\nAvec une équipe d'ingénieurs et de designers passionnés, nous mélangeons innovation et savoir-faire pour créer des motos qui non seulement répondent aux besoins d'aujourd'hui mais dépassent les attentes de demain. Vitesse, puissance et élégance sont au cœur de tout ce que nous faisons.\n\nRejoignez-nous alors que nous redéfinissons l'avenir de la mobilité—une balade à la fois.",
       errorName: "Entre ton nom",
+      errorEmailOrPhone: "Fournis au moins une adresse email ou un numéro de téléphone",
       errorEmail: "Entre une adresse email valide",
-      errorPhone: "Entre un numéro de téléphone valide",
-      errorMotivation: "Explique-nous ta motivation"
+      errorPhone: "Entre un numéro de téléphone valide"
     }
   };
 
@@ -178,20 +181,23 @@ const Demo3 = () => {
       return
     }
 
-    if (!isValidEmail(email)) {
+    const hasEmail = email.trim()
+    const hasPhone = phone.trim()
+
+    if (!hasEmail && !hasPhone) {
+      setError(content[lang].errorEmailOrPhone)
+      setSuccessMessage("")
+      return
+    }
+
+    if (hasEmail && !isValidEmail(email)) {
       setError(content[lang].errorEmail)
       setSuccessMessage("")
       return
     }
 
-    if (!isValidPhone(phone)) {
+    if (hasPhone && !isValidPhone(phone)) {
       setError(content[lang].errorPhone)
-      setSuccessMessage("")
-      return
-    }
-
-    if (!message.trim()) {
-      setError(content[lang].errorMotivation)
       setSuccessMessage("")
       return
     }
@@ -201,7 +207,9 @@ const Demo3 = () => {
     setButtonState("loading")
 
     try {
-      const response = await fetch("https://n8n.srv759792.hstgr.cloud/webhook/ebike-catalogue", {
+      const webhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || "https://n8n.srv759792.hstgr.cloud/webhook-test/ebike-catalogue";
+      
+      const response = await fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -217,15 +225,6 @@ const Demo3 = () => {
       if (response.ok && data.status === "success") {
         setButtonState("success")
         setSuccessMessage(content[lang].successMessage)
-        
-        setTimeout(() => {
-          setName("")
-          setEmail("")
-          setPhone("")
-          setMessage("")
-          setButtonState("idle")
-          setSuccessMessage("")
-        }, 5000)
       } else {
         setButtonState("error")
         setError(content[lang].errorMessage)
@@ -244,6 +243,24 @@ const Demo3 = () => {
       }, 3000)
     }
   };
+
+  const handleAutoFill = (data) => {
+    setName(data.name)
+    setEmail(data.email)
+    setPhone(data.phone)
+    setMessage(data.message)
+    
+    setTimeout(() => {
+      const formElement = subscribeRef.current
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: "smooth" })
+        const nameInput = formElement.querySelector("#name")
+        if (nameInput) {
+          setTimeout(() => nameInput.focus(), 500)
+        }
+      }
+    }, 100)
+  }
   
   return (
     <main className={`main-content-3 ${bricolageGrotesque.className} min-h-screen overflow-hidden`}>
@@ -389,11 +406,53 @@ const Demo3 = () => {
           className="max-w-full w-[1160px] mx-auto bg-[url('/demo-3/comingsoon.png')] bg-cover bg-center text-white rounded-2xl overflow-hidden"
           ref={backgroundRef}
         >
-          <div className="pt-10 pb-6 px-6 sm:p-16 text-center bg-black/60">
+          <div className="pt-10 pb-6 px-6 sm:p-16 text-center bg-black/60 min-h-[400px] flex flex-col justify-center">
 
-            <p className="sm:text-2xl mb-6 sm:mb-8 leading-snug max-w-[550px] mx-auto text-balance tracking-wide">{content[lang].description}</p>
+            <AnimatePresence mode="wait">
+              {buttonState === "success" ? (
+                <motion.div
+                  key="success-message"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5, type: "spring" }}
+                  className="flex flex-col items-center justify-center gap-6 py-8"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                    className="w-20 h-20 sm:w-24 sm:h-24 bg-green-500 rounded-full flex items-center justify-center"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 sm:w-16 sm:h-16 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </motion.div>
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="space-y-4"
+                  >
+                    <h3 className="text-2xl sm:text-4xl font-bold text-white">
+                      {content[lang].successMessage}
+                    </h3>
+                    <p className="text-base sm:text-xl text-white/90 max-w-[500px] mx-auto leading-relaxed">
+                      {content[lang].successSubMessage}
+                    </p>
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="form-content"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <p className="sm:text-2xl mb-6 sm:mb-8 leading-snug max-w-[550px] mx-auto text-balance tracking-wide">{content[lang].description}</p>
 
-            <form ref={subscribeRef} onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-3">
+                  <form ref={subscribeRef} onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-3">
               <div className="grid gap-3">
                 <input
                   className="text-sm sm:text-base bg-white text-black block w-full h-12 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition duration-200 placeholder:text-black/50 shadow-2xl"
@@ -477,16 +536,8 @@ const Demo3 = () => {
                   {error}
                 </motion.p>
               )}
-              {successMessage && (
-                <motion.p 
-                  key="success"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="text-green-400 text-sm mt-3 font-medium"
-                >
-                  {successMessage}
-                </motion.p>
+            </AnimatePresence>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
@@ -549,6 +600,8 @@ const Demo3 = () => {
           </div>
         </div>
       </section>
+
+      <FormTestHelper onAutoFill={handleAutoFill} lang={lang} />
     </main>
   );
 }
