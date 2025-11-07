@@ -42,9 +42,9 @@ const Demo3 = () => {
       comingSoon: "Coming Soon",
       description: "Just give us your info and we'll send you our electric motobike catalogue.",
       namePlaceholder: "Your name",
-      emailPlaceholder: "your@email.com (optional if phone provided)",
-      phonePlaceholder: "+1 234 567 8900 (optional if email provided)",
-      messagePlaceholder: "Tell us about your motivation (optional)",
+      emailPlaceholder: "your@email.com",
+      phonePlaceholder: "+1 234 567 8900",
+      messagePlaceholder: "Tell us about your motivation",
       submit: "Get Catalogue",
       sending: "Sending...",
       done: "Done!",
@@ -55,9 +55,9 @@ const Demo3 = () => {
       aboutHeading: "Redefining urban mobility.",
       aboutText: "At SBS SHOP, we are committed to revolutionizing urban transportation with cutting-edge electric bikes. Our mission is to combine performance, style, and sustainability in every model we create. Whether you're commuting through the city or exploring new terrains, our e-bikes are designed to deliver an unmatched riding experience.\n\nWith a team of passionate engineers and designers, we blend innovation with craftsmanship to create bikes that not only meet today's needs but exceed tomorrow's expectations. Speed, power, and elegance are at the core of everything we do.\n\nJoin us as we redefine the future of mobility—one ride at a time.",
       errorName: "Please enter your name",
-      errorEmailOrPhone: "Please provide at least an email address or a phone number",
       errorEmail: "Please enter a valid email address",
-      errorPhone: "Please enter a valid phone number"
+      errorPhone: "Please enter a valid phone number",
+      errorMotivation: "Please tell us about your motivation"
     },
     fr: {
       about: "À propos",
@@ -67,9 +67,9 @@ const Demo3 = () => {
       comingSoon: "Bientôt",
       description: "Donne juste tes infos et on t'envoie notre catalogue de motos électriques.",
       namePlaceholder: "Ton nom",
-      emailPlaceholder: "ton@email.com (optionnel si téléphone fourni)",
-      phonePlaceholder: "+33 6 12 34 56 78 (optionnel si email fourni)",
-      messagePlaceholder: "Explique-nous ta motivation (optionnel)",
+      emailPlaceholder: "ton@email.com",
+      phonePlaceholder: "+33 6 12 34 56 78",
+      messagePlaceholder: "Explique-nous ta motivation",
       submit: "Recevoir le Catalogue",
       sending: "Envoi en cours...",
       done: "Envoyé!",
@@ -80,9 +80,9 @@ const Demo3 = () => {
       aboutHeading: "Redéfinir la mobilité urbaine.",
       aboutText: "Chez SBS SHOP, nous nous engageons à révolutionner le transport urbain avec des motos électriques de pointe. Notre mission est de combiner performance, style et durabilité dans chaque modèle que nous créons. Que vous vous déplaciez en ville ou que vous exploriez de nouveaux terrains, nos motos électriques sont conçues pour offrir une expérience de conduite inégalée.\n\nAvec une équipe d'ingénieurs et de designers passionnés, nous mélangeons innovation et savoir-faire pour créer des motos qui non seulement répondent aux besoins d'aujourd'hui mais dépassent les attentes de demain. Vitesse, puissance et élégance sont au cœur de tout ce que nous faisons.\n\nRejoignez-nous alors que nous redéfinissons l'avenir de la mobilité—une balade à la fois.",
       errorName: "Entre ton nom",
-      errorEmailOrPhone: "Fournis au moins une adresse email ou un numéro de téléphone",
       errorEmail: "Entre une adresse email valide",
-      errorPhone: "Entre un numéro de téléphone valide"
+      errorPhone: "Entre un numéro de téléphone valide",
+      errorMotivation: "Explique-nous ta motivation"
     }
   };
 
@@ -181,23 +181,20 @@ const Demo3 = () => {
       return
     }
 
-    const hasEmail = email.trim()
-    const hasPhone = phone.trim()
-
-    if (!hasEmail && !hasPhone) {
-      setError(content[lang].errorEmailOrPhone)
-      setSuccessMessage("")
-      return
-    }
-
-    if (hasEmail && !isValidEmail(email)) {
+    if (!isValidEmail(email)) {
       setError(content[lang].errorEmail)
       setSuccessMessage("")
       return
     }
 
-    if (hasPhone && !isValidPhone(phone)) {
+    if (!isValidPhone(phone)) {
       setError(content[lang].errorPhone)
+      setSuccessMessage("")
+      return
+    }
+
+    if (!message.trim()) {
+      setError(content[lang].errorMotivation)
       setSuccessMessage("")
       return
     }

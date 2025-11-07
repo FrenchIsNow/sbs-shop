@@ -8,48 +8,48 @@ const FormTestHelper = ({ onAutoFill, lang = "fr" }) => {
   const testData = {
     en: [
       {
-        label: "Email Only",
+        label: "Test User 1",
         name: "John Doe",
         email: "john.doe@test.com",
-        phone: "",
-        message: ""
-      },
-      {
-        label: "Phone Only",
-        name: "Jane Smith",
-        email: "",
         phone: "+12345678900",
-        message: ""
+        message: "I'm passionate about electric bikes and would love to learn more about your models."
       },
       {
-        label: "Complete",
+        label: "Test User 2",
+        name: "Jane Smith",
+        email: "jane.smith@test.com",
+        phone: "+19876543210",
+        message: "Looking for a powerful e-bike for daily commute."
+      },
+      {
+        label: "Test User 3",
         name: "Mike Johnson",
         email: "mike@test.com",
-        phone: "+12345678900",
-        message: "I'm interested in your e-bikes!"
+        phone: "+11234567890",
+        message: "I'm interested in your premium e-bikes collection!"
       }
     ],
     fr: [
       {
-        label: "Email Seul",
+        label: "Test Utilisateur 1",
         name: "Jean Dupont",
         email: "jean.dupont@test.fr",
-        phone: "",
-        message: ""
-      },
-      {
-        label: "Téléphone Seul",
-        name: "Marie Martin",
-        email: "",
         phone: "+33612345678",
-        message: ""
+        message: "Je suis passionné de motos électriques et j'aimerais en savoir plus sur vos modèles."
       },
       {
-        label: "Complet",
+        label: "Test Utilisateur 2",
+        name: "Marie Martin",
+        email: "marie.martin@test.fr",
+        phone: "+33687654321",
+        message: "À la recherche d'une moto électrique puissante pour mes trajets quotidiens."
+      },
+      {
+        label: "Test Utilisateur 3",
         name: "Pierre Durand",
         email: "pierre@test.fr",
-        phone: "+33612345678",
-        message: "Je suis passionné de motos électriques!"
+        phone: "+33698765432",
+        message: "Je m'intéresse à votre collection de motos électriques premium!"
       }
     ]
   }
@@ -103,7 +103,7 @@ const FormTestHelper = ({ onAutoFill, lang = "fr" }) => {
           </div>
 
           <div className="text-[10px] text-gray-500 pt-2 border-t">
-            Test different scenarios: email only, phone only, or both
+            All fields are required for testing
           </div>
         </div>
       )}
