@@ -1,0 +1,19 @@
+html:has(.main-content-4) {
+  --bg: #f4efe9;
+  --primary: #dde294;
+
+	background-color: var(--bg);
+	background-image: url(../../public/noise.png);
+	background-size: 200px;
+	animation: noise 1s infinite linear alternate;
+}
+
+// animate noice background
+@keyframes noise {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 100% 100%;
+	}
+}

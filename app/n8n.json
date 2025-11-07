@@ -1,0 +1,120 @@
+{
+  "name": "RAGE E-Bike Catalogue Leads (Fixed)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ebike-catalogue",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "responseHeaders": "Access-Control-Allow-Origin: *\nAccess-Control-Allow-Methods: POST, OPTIONS\nAccess-Control-Allow-Headers: Content-Type"
+        }
+      },
+      "id": "Webhook_Ebike",
+      "name": "Receive Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookDescription": "Receive name, email, and phone from e-bike form and save to Google Sheets."
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "authentication": "oAuth2",
+        "documentId": "1hog1XvrnNDqGKz_LGa9yBgBHD0H2F-yzuIIYg3atwvk",
+        "sheetName": "LEAD",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NOM": "={{ $json[\"body\"][\"name\"] }}",
+            "EMAIL": "={{ $json[\"body\"][\"email\"] }}",
+            "NUMERO": "={{ $json[\"body\"][\"phone\"] }}",
+            "MESSAGE": "={{ $json[\"body\"][\"message\"] }}"
+          },
+          "schema": [
+            { "id": "NOM", "displayName": "NOM", "type": "string" },
+            { "id": "EMAIL", "displayName": "EMAIL", "type": "string" },
+            { "id": "NUMERO", "displayName": "NUMERO", "type": "string" },
+            { "id": "MESSAGE", "displayName": "MESSAGE", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "GoogleSheets_Append",
+      "name": "Append Lead to Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [600, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jUotUC5Kz4kZmOsX",
+          "name": "Google Sheets - JoinTheLevelUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\"status\":\"success\",\"message\":\"Lead saved successfully\"} }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "Respond_HTTP",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [950, 300]
+    }
+  ],
+  "connections": {
+    "Receive Lead": {
+      "main": [
+        [
+          {
+            "node": "Append Lead to Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Lead to Sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Paris"
+  }
+}

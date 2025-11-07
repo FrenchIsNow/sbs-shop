@@ -1,0 +1,2 @@
+export const COUNTDOWN_DATE = process.env.NEXT_PUBLIC_COUNTDOWN_DATE || "2026-01-23T00:30:00";
+

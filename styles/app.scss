@@ -1,0 +1,10 @@
+@use "tailwindcss";
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html:has(.main-content) {
+  background-color: #000;
+}
