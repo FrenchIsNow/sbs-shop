@@ -35,7 +35,7 @@ const Demo3 = () => {
 
   const content = {
     en: {
-      about: "About",
+      ourSite: "Our Site",
       getAccess: "Get Access",
       welcome: "Hey, Welcome!",
       announcement: "Our Premium E-Bike Site Is",
@@ -51,16 +51,13 @@ const Demo3 = () => {
       successMessage: "Thank you for your interest!",
       successSubMessage: "We've received your request. After validation, we'll send you our exclusive e-bike catalogue.",
       errorMessage: "Oops! Something went wrong. Please try again.",
-      aboutTitle: "Who are we?",
-      aboutHeading: "Redefining urban mobility.",
-      aboutText: "At SBS SHOP, we are committed to revolutionizing urban transportation with cutting-edge electric bikes. Our mission is to combine performance, style, and sustainability in every model we create. Whether you're commuting through the city or exploring new terrains, our e-bikes are designed to deliver an unmatched riding experience.\n\nWith a team of passionate engineers and designers, we blend innovation with craftsmanship to create bikes that not only meet today's needs but exceed tomorrow's expectations. Speed, power, and elegance are at the core of everything we do.\n\nJoin us as we redefine the future of mobility—one ride at a time.",
       errorName: "Please enter your name",
       errorEmail: "Please enter a valid email address",
       errorPhone: "Please enter a valid phone number",
       errorMotivation: "Please tell us about your motivation"
     },
     fr: {
-      about: "À propos",
+      ourSite: "Notre Site",
       getAccess: "Accès Catalogue",
       welcome: "Bienvenue!",
       announcement: "Notre Site Premium de Motos Électriques Arrive",
@@ -76,9 +73,6 @@ const Demo3 = () => {
       successMessage: "Merci pour ton intérêt!",
       successSubMessage: "Nous avons bien reçu ta demande. Après validation, on t'envoie notre catalogue exclusif de motos électriques.",
       errorMessage: "Oups! Une erreur s'est produite. Réessaie.",
-      aboutTitle: "Qui sommes-nous?",
-      aboutHeading: "Redéfinir la mobilité urbaine.",
-      aboutText: "Chez SBS SHOP, nous nous engageons à révolutionner le transport urbain avec des motos électriques de pointe. Notre mission est de combiner performance, style et durabilité dans chaque modèle que nous créons. Que vous vous déplaciez en ville ou que vous exploriez de nouveaux terrains, nos motos électriques sont conçues pour offrir une expérience de conduite inégalée.\n\nAvec une équipe d'ingénieurs et de designers passionnés, nous mélangeons innovation et savoir-faire pour créer des motos qui non seulement répondent aux besoins d'aujourd'hui mais dépassent les attentes de demain. Vitesse, puissance et élégance sont au cœur de tout ce que nous faisons.\n\nRejoignez-nous alors que nous redéfinissons l'avenir de la mobilité—une balade à la fois.",
       errorName: "Entre ton nom",
       errorEmail: "Entre une adresse email valide",
       errorPhone: "Entre un numéro de téléphone valide",
@@ -110,23 +104,7 @@ const Demo3 = () => {
     }
   }
 
-  const [about, setAbout] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const handleAboutButton = (e) => {
-    e.preventDefault();
-    setAbout((prev) => !prev);
-    setMobileMenuOpen(false);
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    if (!about) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    } else {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
-    }
-  }
 
   const [buttonState, setButtonState] = useState('idle')
   const [name, setName] = useState("")
@@ -282,7 +260,15 @@ const Demo3 = () => {
               </svg>
             </button>
             
-            <button className="hidden sm:block uppercase relative after:absolute after:content-[''] after:w-0 after:h-[1px] after:bg-black after:transition-all after:duration-300 hover:after:w-full after:right-0 hover:after:right-auto hover:after:left-0 after:bottom-0 opacity-100 sm:opacity-75 hover:opacity-100 transition-all duration-300 cursor-pointer" aria-label="About" onClick={handleAboutButton}>{content[lang].about}</button>
+            <a 
+              href="https://sbs-official.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hidden sm:block uppercase relative after:absolute after:content-[''] after:w-0 after:h-[1px] after:bg-black after:transition-all after:duration-300 hover:after:w-full after:right-0 hover:after:right-auto hover:after:left-0 after:bottom-0 opacity-100 sm:opacity-75 hover:opacity-100 transition-all duration-300"
+              aria-label="Our Site"
+            >
+              {content[lang].ourSite}
+            </a>
                 </div>
 
           <div className="order-2 sm:order-2 sm:w-1/3 text-center">
@@ -314,12 +300,15 @@ const Demo3 = () => {
               className="sm:hidden absolute top-full left-0 right-0 bg-white shadow-lg mt-2 rounded-lg overflow-hidden z-50 mx-5"
             >
               <div className="flex flex-col p-4 gap-4">
-                <button 
-                  className="uppercase text-left py-2 border-b border-black/10" 
-                  onClick={handleAboutButton}
+                <a 
+                  href="https://sbs-official.vercel.app/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="uppercase text-left py-2 border-b border-black/10"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
-                  {content[lang].about}
-                </button>
+                  {content[lang].ourSite}
+                </a>
                 <a 
                   className="uppercase text-left py-2" 
                   href="#subscribe" 
@@ -334,10 +323,7 @@ const Demo3 = () => {
       </motion.header>
       
       {/* main content */}
-      <section
-        className="pt-8 px-3 sm:px-8 flex-1 transition-all duration-200"
-        style={about ? { transform: "scale(1) translateY(20%)" } : {}}
-      >
+      <section className="pt-8 px-3 sm:px-8 flex-1 transition-all duration-200">
 
         {/* Content */}
         <section className="text-center mb-8 w-fit mx-auto no-transform-mobile" ref={textContainerRef}>
@@ -572,31 +558,6 @@ const Demo3 = () => {
           ></animate>
         </filter>
       </svg>
-
-      {/* about content */}
-      <section className="fixed inset-0 h-screen w-screen overflow-y-scroll bg-white/90 backdrop-blur-xl z-[9999] opacity-0 invisible transition-all duration-200" style={about ? { opacity: 1, visibility: "visible" } : {}}>
-
-        {/* close button */}
-        <button type="button" onClick={handleAboutButton} className="cursor-pointer block fixed top-6 right-4 transition duration-200 hover:opacity-40 p-3 bg-white z-50" aria-label="Close About">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 5L5 19M5 5l14 14" color="currentColor"/></svg>
-        </button>
-
-        <div className="relative mx-auto w-full max-w-[600px] py-16 sm:py-20 px-6 sm:px-8">
-          <p className="text-black/50">{content[lang].aboutTitle}</p>
-          <p className="text-4xl md:text-5xl font-bold -tracking-[0.01em] mt-6 leading-[1.2] mb-14">
-            {content[lang].aboutHeading}
-          </p>
-
-          <p className="text-black/75 leading-7 md:leading-8 whitespace-pre-line">
-            {content[lang].aboutText}
-          </p>
-
-          <div className="mt-10">
-            <p className={`${bodoniModa.className} text-black text-lg`}>SBS SHOP</p>
-            <p className="mt-1 text-black/50">{lang === "en" ? "Redefining mobility" : "Redéfinir la mobilité"}</p>
-          </div>
-        </div>
-      </section>
 
       <FormTestHelper onAutoFill={handleAutoFill} lang={lang} />
     </main>
