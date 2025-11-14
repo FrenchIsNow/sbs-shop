@@ -15,10 +15,9 @@ const bodoniModa = Bodoni_Moda({
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import CountdownTimer from "./components/CountdownTimer";
 import TextCursorProximity from "./components/TextCursorProximity";
 import FormTestHelper from "./components/FormTestHelper";
-import { COUNTDOWN_DATE } from "./config";
+import CookieConsent from "./components/CookieConsent";
 
 import "@/styles/demo/demo3.scss";
 
@@ -39,7 +38,7 @@ const Demo3 = () => {
       getAccess: "Get Access",
       welcome: "Hey, Welcome!",
       announcement: "Our Premium E-Bike Site Is",
-      comingSoon: "Coming Soon",
+      siteLive: "Our Site Is Live Now!",
       description: "Just give us your info and we'll send you our electric motobike catalogue.",
       namePlaceholder: "Your name",
       emailPlaceholder: "your@email.com",
@@ -61,7 +60,7 @@ const Demo3 = () => {
       getAccess: "Accès Catalogue",
       welcome: "Bienvenue!",
       announcement: "Notre Site Premium de Motos Électriques Arrive",
-      comingSoon: "Bientôt",
+      siteLive: "Notre Site Est Maintenant En Ligne!",
       description: "Donne juste tes infos et on t'envoie notre catalogue de motos électriques.",
       namePlaceholder: "Ton nom",
       emailPlaceholder: "ton@email.com",
@@ -376,9 +375,22 @@ const Demo3 = () => {
             initial={{ opacity: 0, translateY: 20 }}
             animate={{ opacity: 1, translateY: 0 }} 
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="text-[clamp(2rem,6vw,5rem)] flex gap-2 sm:gap-4 justify-center font-bold"
           >
-            <CountdownTimer date={COUNTDOWN_DATE} lang={lang} />
+            <TextCursorProximity
+              key={`site-live-${lang}`}
+              label={content[lang].siteLive}
+              className={`text-[clamp(2rem,6vw,5rem)] uppercase font-bold leading-none tracking-tight`}
+              styles={{
+                transform: {
+                  from: "translateY(0) scaleX(1)",
+                  to: "translateY(-20px) scaleX(1.3)",
+                },
+                color: { from: "#000000", to: "#d11313" },
+              }}
+              falloff="gaussian"
+              radius={100}
+              containerRef={textContainerRef}
+            />
           </motion.div>
         </section>
 
@@ -560,6 +572,7 @@ const Demo3 = () => {
       </svg>
 
       <FormTestHelper onAutoFill={handleAutoFill} lang={lang} />
+      <CookieConsent lang={lang} />
     </main>
   );
 }

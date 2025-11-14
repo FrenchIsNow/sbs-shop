@@ -1,4 +1,5 @@
 import "@/styles/app.scss";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 export const metadata = {
   title: "SBS SHOP - Coming Soon ",
@@ -24,6 +25,7 @@ const SbsShopApp = ({ children }) => {
   return (
     <html lang="en">
       <body>
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
